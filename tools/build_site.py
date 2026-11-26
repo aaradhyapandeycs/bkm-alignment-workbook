@@ -163,7 +163,7 @@ def short_link(lesson):
 
 REPOSITORY = "https://github.com/aaradhyapandeycs/bkm-alignment-workbook"
 PRINT_PDF = f"{REPOSITORY}/raw/refs/heads/main/print/workbook.pdf"
-THEME_ASSETS = '<link rel="stylesheet" href="workbook.css?v=3"><script src="appearance.js"></script>'
+THEME_ASSETS = '<link rel="stylesheet" href="workbook.css?v=4"><script src="appearance.js"></script>'
 
 
 def masthead(current):

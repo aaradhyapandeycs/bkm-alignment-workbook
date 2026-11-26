@@ -108,9 +108,12 @@ summary{cursor:pointer;color:var(--link);font-size:.87rem;font-weight:600}
 details[open]{border-color:var(--accent);background:var(--wash);padding-bottom:.35rem}
 details[open] summary{margin-bottom:.5rem}
 details>div>:last-child{margin-bottom:.3rem}
-.display-math{max-width:100%;overflow-x:auto;overflow-y:hidden;margin:1.05rem 0;padding:.35rem .12rem}
-.display-math math{width:max-content;min-width:100%;math-style:normal}
-.inline-math{display:inline-block;max-width:100%;overflow-x:auto;vertical-align:middle;line-height:1.25;padding:.05em .025em}
+.display-math{max-width:100%;margin:1.05rem 0;padding:.35rem .12rem;text-align:center}
+.display-math math{max-width:100%;math-style:normal}
+/* Inline equations share the text baseline. A scroll container here gives even
+   a single symbol its own scrollbars on systems with always-visible scrollbars. */
+.inline-math{display:inline}
+.inline-math mjx-container[jax="SVG"]{display:inline-block;max-width:100%}
 math{font-family:"STIX Two Math","Cambria Math","Latin Modern Math",math;font-size:1.03em}
 .prev-next{display:flex;justify-content:space-between;gap:1.5rem;border-top:1px solid var(--rule);padding:1.35rem 0}
 .prev-next>div{max-width:48%}
@@ -128,12 +131,13 @@ footer{border-top:1px solid var(--rule);padding:1.5rem 0 2.2rem;color:var(--dim)
 .reading-links{font:.88rem/1.5 var(--sans);margin:.5rem 0 1.25rem}
 .embedded header,.embedded footer{display:none}
 .embedded .sheet-head{padding-top:1.2rem}
-.display-math mjx-container[display="true"]{margin:0!important;min-width:max-content}
-mjx-container[jax="SVG"] svg{max-width:none}
+.display-math mjx-container[display="true"]{margin:0!important;max-width:100%}
+/* Keep the SVG's natural size until a formula exceeds the reading column. */
+:is(.inline-math,.display-math) mjx-container[jax="SVG"] > svg{max-width:100%;height:auto}
 .paper-section{padding:.65rem 0 1.8rem;scroll-margin-top:5rem;border-top:1px solid var(--rule)}
 .paper-section h2{font-size:2rem;margin:1.1rem 0 .8rem}
 .paper-section h3{font-size:1.4rem;margin:1.3rem 0 .55rem}
-@media(max-width:760px){.top nav{flex-wrap:wrap;row-gap:.2rem}.inline-math mjx-container{max-width:none}}
+@media(max-width:760px){.top nav{flex-wrap:wrap;row-gap:.2rem}}
 @media print{.entry-links,.reading-links{display:none}.paper-section{padding:.4cm 0}.paper-section h2,.paper-section h3{break-after:avoid}}
 
 @media print{header,.resource-links,.on-page{display:none}.topband,.index-head{color:black;background:white;border:0;padding:0}.byline,.subtitle{color:black}.overview,.parts,.routes{display:block}.part{break-inside:avoid}.landing-body{font-size:10pt}.results-scroll{overflow:visible}}
