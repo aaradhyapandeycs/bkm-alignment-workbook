@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from html import escape
 import re
 
+from paper_results import RESULTS, result_id
 from build_site import DOCS, ROOT, PAPER, load_math, prose, shell
 
 PDF = "https://arxiv.org/pdf/2609.01595v1"
@@ -34,28 +35,7 @@ PARTS = (
     Part("discussion", "§6 and Appendix A · Discussion and proofs", "S6", 58, (12,)),
 )
 
-# Page in the original v1 PDF (one-indexed), and sheet that derives the result.
-RESULTS = {
-    "proposition-1": (11, 2),
-    "lemma-1": (15, 3),
-    "proposition-2": (16, 4),
-    "proposition-3": (25, 5),
-    "lemma-2": (27, 5),
-    "proposition-4": (32, 6),
-    "proposition-5": (35, 6),
-    "proposition-6": (41, 7),
-    "proposition-7": (43, 8),
-    "proposition-8": (46, 9),
-    "proposition-9": (52, 10),
-    "proposition-10": (55, 11),
-}
 HEADINGS = re.compile(r"^(#{2,4})\s+(.+)$", re.M)
-NUMBERED = re.compile(r"^(Proposition|Lemma)\s+([1-9]\d*)\.\s+(.+)$")
-
-
-def result_id(label):
-    match = NUMBERED.fullmatch(label)
-    return f"{match[1].lower()}-{match[2]}" if match else None
 
 
 def read_part(part):
@@ -146,7 +126,7 @@ def build(node="node", katex="katex", fresh=False):
 <p><a href="{PAPER}#A1">Appendix A in the original paper</a> · <a href="{PDF}#page=65">Appendix PDF p. 65</a> · <a href="index.html#contents">All twelve exercise sheets</a></p>
 </article></div></main>"""
     DOCS.mkdir(exist_ok=True)
-    (DOCS / "paper.html").write_text(shell("Paper reader", contents), encoding="utf-8")
+    (DOCS / "paper.html").write_text(shell("Paper reader", contents, "paper"), encoding="utf-8")
     print(f"Built paper reader: {len(chapters)} sections, {len(results)} named results, {len(math)} distinct formulas.")
 
 

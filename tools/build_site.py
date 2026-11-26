@@ -16,6 +16,8 @@ import subprocess
 from urllib.parse import urlsplit
 import unicodedata
 
+from paper_results import NUMBERED, RESULTS, result_id
+
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
 PAPER = "https://arxiv.org/html/2609.01595v1"
@@ -159,15 +161,31 @@ def short_link(lesson):
     return f'<a href="{lesson.path.stem}.html">{escape(lesson.title)}</a>'
 
 
-def shell(title, contents):
+REPOSITORY = "https://github.com/aaradhyapandeycs/bkm-alignment-workbook"
+PRINT_PDF = f"{REPOSITORY}/raw/refs/heads/main/print/workbook.pdf"
+THEME_ASSETS = '<link rel="stylesheet" href="workbook.css?v=3"><script src="appearance.js"></script>'
+
+
+def masthead(current):
+    links = [("overview", "index.html", "Overview"), ("paper", "paper.html", "Paper reader"),
+             ("exercises", "index.html#contents", "Exercises"), ("study", "study.html", "Study side by side")]
+    items = []
+    for key, href, label in links:
+        active = ' aria-current="page"' if key == current else ''
+        items.append(f'<a href="{href}"{active}>{label}</a>')
+    return f'''<header><div class="frame top"><a class="home" href="index.html">Alignment workbook</a>
+<nav aria-label="Project">{''.join(items)}</nav><button class="theme-toggle" type="button" hidden aria-label="Dark mode" aria-pressed="false"><span aria-hidden="true">◐</span></button></div></header>'''
+
+
+def shell(title, contents, current="exercises"):
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{escape(title)} · Alignment workbook</title><link rel="stylesheet" href="workbook.css">
+<title>{escape(title)} · Alignment workbook</title>{THEME_ASSETS}
 <script src="mathjax-config.js"></script>
 <script id="MathJax-script" src="vendor/mathjax-3.2.2/tex-mml-svg.js" defer></script>
 <script src="workbook.js" defer></script></head>
 <body><a class="skip" href="#main">Skip to content</a>
-<header><div class="frame top"><a class="home" href="index.html">Alignment workbook</a><nav aria-label="Workbook"><a href="paper.html">Paper</a><a href="index.html#contents">Exercises</a><a href="study.html">Study side by side</a><a href="{PAPER}">Original paper ↗</a></nav></div></header>
+{masthead(current)}
 {contents}
 <footer><div class="frame">An independent exercise companion to <a href="{PAPER}">Bergemann, Koh and Morris</a>. Workbook format inspired by <a href="{INSPIRATION}">GRH via exercises</a>.</div></footer>
 </body></html>
@@ -208,17 +226,33 @@ def index_page(lessons):
         parts.append(f'<section class="part"><h3>{escape(title)}</h3><p>{escape(summary)}</p><ol start="{start}">{"".join(rows)}</ol></section>')
     def route(nums):
         return " → ".join(f'<a href="{lessons[n-1].path.stem}.html">{n:02}</a>' for n in nums)
-    contents = f"""<main id="main" class="frame"><div class="index-head"><div class="kicker">A mathematical exercise companion</div>
-<h1>Mechanism design for<br>alignment and control</h1>
-<p>A designer can ask an agent to describe its abilities and tell it what to do. What makes it profitable for the agent to tell the truth, then follow the instruction after it learns something new?</p>
-<p>These twelve sheets reconstruct the framework and all five applications of <a href="{PAPER}">Bergemann, Koh and Morris (2026)</a> through {total} exercises. Each begins with a modeling vignette. Try the problem first, then open its hint or its worked solution.</p>
-<div class="entry-links"><a class="start" href="paper.html">Read the paper guide <span aria-hidden="true">→</span></a><a class="start outlined" href="#contents">Explore the exercises <span aria-hidden="true">↓</span></a></div>
-<p class="reading-links"><a href="study.html">Study side by side</a><a href="https://github.com/aaradhyapandeycs/bkm-alignment-workbook/raw/refs/heads/main/print/workbook.pdf">Solved workbook (PDF)</a><a href="https://github.com/aaradhyapandeycs/bkm-alignment-workbook">GitHub repository</a></p></div>
+    titles = {}
+    for chapter in (ROOT / "reader").glob("*.md"):
+        for line in chapter.read_text().splitlines():
+            heading = re.fullmatch(r"#{2,4} (.*)", line)
+            if heading and (numbered := NUMBERED.fullmatch(heading[1])):
+                titles[result_id(heading[1])] = numbered.groups()
+    result_rows = []
+    for key, (page, n) in RESULTS.items():
+        kind, number, label = titles[key]
+        result_rows.append(f'<tr><th scope="row"><a href="paper.html#{key}">{kind} {number}</a></th>'
+                           f'<td>{escape(label)}</td><td><a href="{lessons[n-1].path.stem}.html">Sheet {n:02}</a></td>'
+                           f'<td><a href="https://arxiv.org/pdf/2609.01595v1#page={page}">p. {page}</a></td></tr>')
+    contents = f"""<main id="main" class="landing"><section class="topband" aria-labelledby="project-title"><div class="frame">
+<div class="index-head"><p class="byline">Dirk Bergemann · Andrew Koh · Stephen Morris</p>
+<h1 id="project-title">Mechanism design for alignment and control</h1>
+<p class="subtitle">A mathematical workbook on what a designer can learn about an agent’s capabilities, and which actions a contract can induce.</p>
+<nav class="resource-links" aria-label="Project resources"><a href="paper.html">Paper reader</a><a href="#contents">Exercise sheets</a><a href="study.html">Study side by side</a><a href="{PRINT_PDF}">Workbook PDF</a><a href="{PAPER}">Original paper ↗</a><a href="{REPOSITORY}">GitHub ↗</a></nav></div></div></section>
+<div class="frame landing-body"><section class="overview" aria-labelledby="overview-title"><div><h2 id="overview-title">About the workbook</h2>
+<p>An agent can hide a tool when it reports its capabilities and still use it after signing a contract. What makes it willing to report honestly and follow an instruction once its private signal arrives?</p>
+<p>Work through the <a href="{PAPER}">paper</a> in {total} exercises across twelve sheets. Each sheet opens with a modeling vignette and includes hints and worked solutions.</p></div>
+<nav class="on-page" aria-label="On this page"><h2>On this page</h2><a href="#contents">Sheets and source map</a><a href="#results">Propositions and lemmas</a><a href="#seminar">Seminar routes</a></nav></section>
 <section id="contents"><h2 class="section-title">Sheets and source map</h2><div class="parts">{''.join(parts)}</div></section>
+<section id="results"><h2 class="section-title">Propositions and lemmas</h2><div class="results-scroll" role="region" aria-label="Numbered results in paper order" tabindex="0"><table><thead><tr><th>Result</th><th>Statement in the reader</th><th>Exercises</th><th>Original PDF</th></tr></thead><tbody>{''.join(result_rows)}</tbody></table></div></section>
 <section id="seminar"><h2 class="section-title">Seminar routes</h2><div class="routes"><div><h3>From the model to the characterization</h3><p>{route([1,2,3,4])}. Build both deviation tests and construct supporting rewards.</p></div>
 <div><h3>Capability and discretion</h3><p>{route([1,2,5,6])}. Use a capability certificate to reason about pooling and caps.</p></div>
-<div><h3>From peers to oversight</h3><p>{route([1,7,8,9,10,11,12])}. Follow the flow of private information, compare instruments and finish with the deployment capstone.</p></div></div></section></main>"""
-    return shell("Mechanism design for alignment and control", contents)
+<div><h3>From peers to oversight</h3><p>{route([1,7,8,9,10,11,12])}. Follow the flow of private information, compare instruments and finish with the deployment capstone.</p></div></div></section></div></main>"""
+    return shell("Mechanism design for alignment and control", contents, "overview")
 
 
 def main():

@@ -2,6 +2,8 @@
 from html import escape
 from pathlib import Path
 
+from build_site import THEME_ASSETS, masthead
+
 ROOT = Path(__file__).resolve().parents[1]
 PDF = "https://arxiv.org/pdf/2609.01595v1"
 # Sheet order. Pages are one-based in the published PDF.
@@ -23,10 +25,9 @@ def build():
     contents = f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Study side by side · Alignment workbook</title>
-<link rel="stylesheet" href="workbook.css"><link rel="stylesheet" href="study.css"><script defer src="study.js"></script></head>
+{THEME_ASSETS}<link rel="stylesheet" href="study.css?v=3"><script defer src="study.js"></script></head>
 <body><a class="skip" href="#main">Skip to reading controls</a>
-<header><div class="frame top"><a class="home" href="index.html">Alignment workbook</a><nav aria-label="Workbook">
-<a href="paper.html">Paper reader</a><a href="index.html#contents">Exercises</a></nav></div></header>
+{masthead("study")}
 <main id="main"><div class="controls"><h1>Study side by side</h1>
 <label for="sheet">Exercise sheet<select id="sheet">{''.join(options)}</select></label>
 <label for="edition">Paper view<select id="edition"><option value="notes">MathJax reading notes</option><option value="original">Authors’ full paper (PDF)</option></select></label>
