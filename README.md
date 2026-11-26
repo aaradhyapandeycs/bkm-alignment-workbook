@@ -2,7 +2,7 @@
 
 An independent mathematical reading companion to Dirk Bergemann, Andrew Koh and Stephen Morris, *Mechanism Design for Alignment and Control* (September 1, 2026). The exercises, fictional vignettes and worked solutions are written for this workbook. The exposition follows the simplest-case-first structure of *GRH via exercises*. [Original paper](https://arxiv.org/abs/2609.01595v1) · [Reference workbook](https://ultronozm.github.io/grh-workbook/)
 
-**Start with [The agent who takes the action](sheets/01-model.md)** or [download the printable workbook](print/workbook.pdf). The [web edition](docs/index.html) has expandable hints and solutions. To read it offline, download the repository, extract it and open `docs/index.html` in a browser.
+**Start with [The agent who takes the action](sheets/01-model.md)** or [download the printable workbook](print/workbook.pdf). The [live web edition](https://aaradhyapandeycs.github.io/bkm-alignment-workbook/) has expandable hints and solutions. To read it offline, download the repository, extract it and open `docs/index.html` in a browser.
 
 A curator asks an assistant to identify a damaged crate. An assistant with an accurate sensor can pretend its reading is uninformative. And once the curator has offered a contract, the assistant who understated its abilities still has the accurate sensor. What terms would induce it to report honestly *and* act as instructed? That question runs through the workbook, from the first two-type example to the final peer-scored contract.
 
@@ -38,3 +38,7 @@ The paper studies implementation as an equilibrium existence claim. A prescribed
 The appendix arguments are integrated into Sheets 5 and 6. The finite transport and linear-programming exercises on Sheets 3 and 4 and the examples on Sheet 12 are pedagogical additions. The final sheet identifies the research directions left open in the paper. This workbook was prepared with AI assistance and is unaffiliated with the paper's authors and the GRH workbook project.
 
 [Read the paper in HTML](https://arxiv.org/html/2609.01595v1) · [Original PDF](https://arxiv.org/pdf/2609.01595v1)
+
+## Rebuilding the editions
+
+Edit the Markdown in `sheets/`, then run `python3 tools/build_site.py` and `python3 tools/build_print.py`. The site builder can reuse rendered equations. Its help lists the Node and KaTeX options for new formulas. The print edition requires pdfLaTeX. To update Pages after committing and pushing the sources on `main`, publish the contents of `docs/` at the root of `gh-pages`.

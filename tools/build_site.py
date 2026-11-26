@@ -207,6 +207,7 @@ def index_page(lessons):
 <h1>Mechanism design for<br>alignment and control</h1>
 <p>A designer can ask an agent to describe its abilities and tell it what to do. What makes it profitable for the agent to tell the truth, then follow the instruction after it learns something new?</p>
 <p>These twelve sheets reconstruct the framework and all five applications of <a href="{PAPER}">Bergemann, Koh and Morris (2026)</a> through {total} exercises. Each begins with a modeling vignette. Try the problem first, then open its hint or its worked solution.</p>
+<p><a href="https://github.com/aaradhyapandeycs/bkm-alignment-workbook/raw/refs/heads/main/print/workbook.pdf">Download the solved workbook (PDF)</a> · <a href="https://github.com/aaradhyapandeycs/bkm-alignment-workbook">GitHub repository</a></p>
 <a class="start" href="{lessons[0].path.stem}.html">Begin with sheet 01 <span aria-hidden="true">→</span></a></div>
 <section id="contents"><h2 class="section-title">Sheets and source map</h2><div class="parts">{''.join(parts)}</div></section>
 <section id="seminar"><h2 class="section-title">Seminar routes</h2><div class="routes"><div><h3>From the model to the characterization</h3><p>{route([1,2,3,4])}. Build both deviation tests and construct supporting rewards.</p></div>
