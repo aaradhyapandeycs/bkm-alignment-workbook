@@ -34,6 +34,8 @@ MAP = [
     ("§5 · Example IV · Proposition 8", "S5"), ("§5 · Example V · Proposition 9", "S5"),
     ("§5 · Example V · Proposition 10", "S5"), ("§6 · Discussion", "S6"),
 ]
+PAPER_ANCHORS = ["model", "model", "cycles", "cycles", "single", "single", "team", "team",
+                 "competition", "oversight", "oversight", "discussion"]
 Lesson = namedtuple("Lesson", "path title introduction exercises")
 Formula = namedtuple("Formula", "tex display")
 MATH = re.compile(r"\$\$(?P<block>.*?)\$\$|\$(?P<inline>[^$\n]+?)\$", re.S)
@@ -160,9 +162,12 @@ def short_link(lesson):
 def shell(title, contents):
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{escape(title)} · Alignment workbook</title><link rel="stylesheet" href="workbook.css"><script src="workbook.js" defer></script></head>
+<title>{escape(title)} · Alignment workbook</title><link rel="stylesheet" href="workbook.css">
+<script src="mathjax-config.js"></script>
+<script id="MathJax-script" src="vendor/mathjax-3.2.2/tex-mml-svg.js" defer></script>
+<script src="workbook.js" defer></script></head>
 <body><a class="skip" href="#main">Skip to content</a>
-<header><div class="frame top"><a class="home" href="index.html">Alignment workbook</a><nav aria-label="Workbook"><a href="index.html#contents">Contents</a><a href="index.html#seminar">Seminar routes</a><a href="{PAPER}">Paper ↗</a></nav></div></header>
+<header><div class="frame top"><a class="home" href="index.html">Alignment workbook</a><nav aria-label="Workbook"><a href="paper.html">Paper</a><a href="index.html#contents">Exercises</a><a href="study.html">Study side by side</a><a href="{PAPER}">Original paper ↗</a></nav></div></header>
 {contents}
 <footer><div class="frame">An independent exercise companion to <a href="{PAPER}">Bergemann, Koh and Morris</a>. Workbook format inspired by <a href="{INSPIRATION}">GRH via exercises</a>.</div></footer>
 </body></html>
@@ -185,7 +190,7 @@ def sheet_page(lessons, index, math):
     following = short_link(lessons[index+1]) if index+1 < len(lessons) else '<a href="index.html">Contents</a>'
     menu = "".join(f'<li><a href="#exercise-{n}">{inline(h)}</a></li>' for n, h, *_ in lesson.exercises)
     contents = f"""<main id="main" class="frame sheet"><div class="sheet-head"><div class="kicker">Sheet {number:02} · <a href="{PAPER}#{anchor}">{escape(ref)}</a></div>
-<h1>{escape(lesson.title)}</h1><div class="intro">{prose(lesson.introduction, math)}</div></div>
+<h1>{escape(lesson.title)}</h1><p class="reading-links"><a href="paper.html#{PAPER_ANCHORS[index]}">Read the corresponding paper section</a><a href="study.html?sheet={number}">Study side by side</a></p><div class="intro">{prose(lesson.introduction, math)}</div></div>
 <div class="work-area"><aside aria-label="On this sheet"><div><h2>Exercises</h2><ol>{menu}</ol><button type="button" data-toggle hidden>Show all answers</button><button type="button" data-print hidden>Print sheet</button></div></aside>
 <article>{''.join(questions)}<nav class="prev-next" aria-label="Adjacent sheets"><div><small>Previous</small>{previous}</div><div><small>Next</small>{following}</div></nav></article></div></main>"""
     return shell(lesson.title, contents)
@@ -207,8 +212,8 @@ def index_page(lessons):
 <h1>Mechanism design for<br>alignment and control</h1>
 <p>A designer can ask an agent to describe its abilities and tell it what to do. What makes it profitable for the agent to tell the truth, then follow the instruction after it learns something new?</p>
 <p>These twelve sheets reconstruct the framework and all five applications of <a href="{PAPER}">Bergemann, Koh and Morris (2026)</a> through {total} exercises. Each begins with a modeling vignette. Try the problem first, then open its hint or its worked solution.</p>
-<p><a href="https://github.com/aaradhyapandeycs/bkm-alignment-workbook/raw/refs/heads/main/print/workbook.pdf">Download the solved workbook (PDF)</a> · <a href="https://github.com/aaradhyapandeycs/bkm-alignment-workbook">GitHub repository</a></p>
-<a class="start" href="{lessons[0].path.stem}.html">Begin with sheet 01 <span aria-hidden="true">→</span></a></div>
+<div class="entry-links"><a class="start" href="paper.html">Read the paper guide <span aria-hidden="true">→</span></a><a class="start outlined" href="#contents">Explore the exercises <span aria-hidden="true">↓</span></a></div>
+<p class="reading-links"><a href="study.html">Study side by side</a><a href="https://github.com/aaradhyapandeycs/bkm-alignment-workbook/raw/refs/heads/main/print/workbook.pdf">Solved workbook (PDF)</a><a href="https://github.com/aaradhyapandeycs/bkm-alignment-workbook">GitHub repository</a></p></div>
 <section id="contents"><h2 class="section-title">Sheets and source map</h2><div class="parts">{''.join(parts)}</div></section>
 <section id="seminar"><h2 class="section-title">Seminar routes</h2><div class="routes"><div><h3>From the model to the characterization</h3><p>{route([1,2,3,4])}. Build both deviation tests and construct supporting rewards.</p></div>
 <div><h3>Capability and discretion</h3><p>{route([1,2,5,6])}. Use a capability certificate to reason about pooling and caps.</p></div>

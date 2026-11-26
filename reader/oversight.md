@@ -1,0 +1,21 @@
+# Oversight when the reviewer has a preference
+
+An inventory forecaster knows tomorrow's demand. Its reviewer knows something else: how much the forecaster tends to overorder. Two kinds of expertise sit with different players. If the human takes tomorrow's order away from the forecaster, the demand information goes with it. If the human gives the reviewer complete control of the score, the reviewer's preference governs the order. Example V asks how much authority to delegate to this informed intermediary. [Original paper, §5](https://arxiv.org/html/2609.01595v1#S5)
+
+## Who chooses before demand arrives?
+
+Demand $\theta$ is uniform on $[0,1]$. The human, reviewer and forecaster want orders $\theta$, $\theta+w$ and $\theta+b$, respectively, and each loses the square of its error. The human commits to the reviewer's available instruments before the actor bias $b$ is drawn. The reviewer learns $b$, chooses an instrument and hands it to the forecaster. Only then does the forecaster see demand. The independence of $b$ and $\theta$ means that diagnosing the bias leaves the reviewer's demand distribution unchanged.
+
+With veto power alone, the reviewer can release the forecaster or impose the human's preferred fixed order, $1/2$. Release costs the reviewer $(b-w)^2$. The fallback costs $1/12+w^2$, the variance of demand plus the squared distance of the fallback from the reviewer's preferred fixed order. The reviewer compares these two numbers. An agent can therefore be far from the human and still clear the review if the reviewer shares its bias. [Compute the veto rule](10-oversight.html#exercise-1)
+
+## Proposition 9. Losses across oversight regimes
+
+Suppose the reviewer can instead choose any closed permission set. Subtract $w$ from the order so that the reviewer now wants $\theta$ and the forecaster wants $\theta+t$, with $t=b-w$. When $0<t<1/2$, a cap at $1-t$ in these translated units lets the forecaster use its demand information over the lower states. The cap binds over the top $2t$ of states. Across that region the error relative to the reviewer runs from $t$ down to $-t$. With the opposite bias the argument reflects to give a floor. At $|t|\ge1/2$, the reviewer can optimally insist on its preferred constant. A distance-function inequality establishes that searching over disconnected permission sets cannot improve on these choices. [Compare arbitrary permission sets](10-oversight.html#exercise-2)
+
+A reviewer who can write any admissible reward achieves more. An affine score with slope $-2(b-w)$ makes the forecaster's quadratic payoff peak at $\theta+w$ for every state. The reviewer gets zero loss. The human gets loss $w^2$, even when the forecaster originally had $b=0$. Proposition 9 shows why the human may choose any of the three regimes as its prior on $b$ changes. [Reconstruct Figure 11](10-oversight.html#exercise-6)
+
+## Proposition 10. Robust first best
+
+Proposition 10 asks the human to choose the set of scores the reviewer may offer. Label a score by the diagnosis $h$. On ordinary orders in $[0,1]$ give it slope $-2h$. Its residual target is $z=\theta+b-h$. Truthful diagnosis would make the order match demand perfectly. To understand why the reviewer should reveal $b$, take $w>0$. A small understatement gives the reviewer a larger order in most states, precisely what it wants.
+
+Now add isolated orders $-R$ and $1+R$, each with a bonus $R^2$ on top of the affine score. The payoff difference between $1+R$ and $1$ is $2R(z-1)$. An understatement by $t\in(0,1]$ therefore sends a whole strip of high-demand states, of probability $t$, to the upper extreme. The lower extreme deals with overstatements. These bonuses never change the truthful order except at zero-probability endpoints. When $|w|\le B$, choosing $R>B+\sqrt{B^2+2B}$ makes the expected loss on the strip exceed the reviewer's possible gain in ordinary states. The reviewer strictly prefers the honest label for every realized $b$. Commitment to every offered action, even ones absent along truthful play, is what makes the menu credible. [Derive the forecaster's choices](11-reward-menus.html#exercise-3) · [Prove the reviewer's incentive](11-reward-menus.html#exercise-5)

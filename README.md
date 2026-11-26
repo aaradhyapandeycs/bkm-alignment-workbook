@@ -2,7 +2,7 @@
 
 An independent mathematical reading companion to Dirk Bergemann, Andrew Koh and Stephen Morris, *Mechanism Design for Alignment and Control* (September 1, 2026). The exercises, fictional vignettes and worked solutions are written for this workbook. The exposition follows the simplest-case-first structure of *GRH via exercises*. [Original paper](https://arxiv.org/abs/2609.01595v1) · [Reference workbook](https://ultronozm.github.io/grh-workbook/)
 
-**Start with [The agent who takes the action](sheets/01-model.md)** or [download the printable workbook](print/workbook.pdf). The [live web edition](https://aaradhyapandeycs.github.io/bkm-alignment-workbook/) has expandable hints and solutions. To read it offline, download the repository, extract it and open `docs/index.html` in a browser.
+**[Read the paper with the exercises side by side](https://aaradhyapandeycs.github.io/bkm-alignment-workbook/study.html)** · [Paper reader and theorem index](https://aaradhyapandeycs.github.io/bkm-alignment-workbook/paper.html) · [All exercises](https://aaradhyapandeycs.github.io/bkm-alignment-workbook/#contents) · [Printable workbook](print/workbook.pdf). The website renders mathematics with MathJax. Choose a sheet to see its paper section and worked exercises together. Switch the paper pane between reading notes and the complete author-hosted PDF. To read it offline, download the repository, extract it and open `docs/index.html` in a browser.
 
 A curator asks an assistant to identify a damaged crate. An assistant with an accurate sensor can pretend its reading is uninformative. And once the curator has offered a contract, the assistant who understated its abilities still has the accurate sensor. What terms would induce it to report honestly *and* act as instructed? That question runs through the workbook, from the first two-type example to the final peer-scored contract.
 
@@ -41,4 +41,4 @@ The appendix arguments are integrated into Sheets 5 and 6. The finite transport 
 
 ## Rebuilding the editions
 
-Edit the Markdown in `sheets/`, then run `python3 tools/build_site.py` and `python3 tools/build_print.py`. The site builder can reuse rendered equations. Its help lists the Node and KaTeX options for new formulas. The print edition requires pdfLaTeX. To update Pages after committing and pushing the sources on `main`, publish the contents of `docs/` at the root of `gh-pages`.
+Edit the Markdown in `reader/` and `sheets/`. From the repository root, run `python3 tools/build_site.py`, `python3 tools/build_reader.py`, and `python3 tools/build_study.py` to regenerate the website. Run `python3 tools/build_print.py` to regenerate the exercise PDF. The site builder can reuse rendered equations. Its help lists the Node and KaTeX options for new formulas. The print edition requires pdfLaTeX. To update Pages after committing and pushing the sources on `main`, publish the contents of `docs/` at the root of `gh-pages`.

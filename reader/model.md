@@ -1,0 +1,23 @@
+# What does a capability report change?
+
+A museum asks a conservation assistant whether it can read a humidity sensor and place a work order. A successful demonstration establishes a capability. An unsuccessful demonstration is ambiguous: a capable assistant might prefer the deployment contract reserved for systems that fail. The ambiguity matters because tomorrow the assistant will be alone with the crate. It will see a sensor reading and decide whether to order treatment. Asking for a report today leaves a decision in its hands tomorrow.
+
+## Four components of an agent
+
+The state is $\theta$, the human values action $a$ at $v(a,\theta)$, and the agent privately knows its type $t=(A[t],u[t],h[t],\pi[t])$. Here $A[t]$ lists what the agent can execute, $u[t]$ says how it values the consequences, $h[t]$ is its prior on the state, and $\pi[t](s\mid\theta)$ gives its eventual signal. For example, a perfect sensor determines which crate is wet. It gives its owner neither a reason to treat the wet crate nor a tool with which to do so. [Separate the three questions in Exercise 1](01-model.html#exercise-1).
+
+The two participants can disagree even with identical payoffs. A decision to claim a prize worth $1$ for success and $-2$ for failure has value $3q-2$ at posterior success probability $q$. If a reading moves the agent to $q=4/7$ and the human to $q=6/7$, the agent declines an opportunity the human would take. The agent therefore evaluates deviations under $h[t](\theta)\pi[t](s\mid\theta)$, while the human evaluates outcomes under her joint law $\Gamma(\theta,t)\pi[t](s\mid\theta)$. The assumption $\Gamma(\cdot\mid t)\ll h[t]$ ensures that events the agent regards as null also have zero probability for the designer conditional on that type, for almost every designer-supported type. [Derive the posteriors](01-model.html#exercise-2) and [check the support condition](01-model.html#exercise-3).
+
+## Evidence limits imitation
+
+Write $t\trianglerighteq j$ if type $t$ can substantiate report $j$, and $C(t)=\{j:t\trianglerighteq j\}$. Reflexivity guarantees an honest report. Transitivity says that if $t$ can impersonate $j$, it can also make any claim available to $j$. One possible protocol compares both tools and sensors: $t$ has all of $j$'s tools, and a state-independent randomization of $t$'s observations reproduces $j$'s experiment. Distinct preference types can have identical credentials and imitate each other in both directions. The verification relation is part of the model. [Build a garbling explicitly](01-model.html#exercise-4).
+
+## Honesty before the signal, obedience afterward
+
+In an indirect mechanism the agent sends an admissible message $x$, receives a random reply $y$, observes $s$, and then acts. A direct mechanism asks for $j\in C(t)$ and sends a random contingent plan $p:S\to A$. It pays $r(j,a,\theta)$ for the action actually taken. On report $j$, each recommended plan must use actions in $A[j]$. The agent who filed that report still knows its own signal and can choose any action in $A[t]$. An incentive comparison must therefore allow a deviation that chooses both $j$ and a continuation $d(p,s)\in A[t]$. It is possible to lose by lying alone and lose by disobeying alone, yet gain by doing both. [Construct that deviation](02-revelation.html#exercise-2).
+
+## Proposition 1. Single-agent revelation principle
+
+Fix an equilibrium of an indirect mechanism. Let $x(t)$ be its first message and $\alpha(t,x,y,s)$ its subsequent choice. On direct report $j$, simulate the old reply to $x(j)$ and send the whole plan $p(s)=\alpha(j,x(j),y,s)$. Pay the old reward $R(x(j),a,\theta)$. Coupling the new and old mechanisms with the same state, true signal and simulated reply gives the same action under truthful obedience. To check incentives, have a type $t$ send $x(j)$ in the old mechanism and apply any proposed direct deviation to the resulting plan. This is a feasible old deviation because the input menus satisfy $X(j)\subseteq X(t)$ whenever $j\in C(t)$. The old equilibrium rules out every such gain.
+
+Conversely, treat direct reports as messages, $C(t)$ as input menus and plans as replies. Transitivity supplies the required menu inclusions. Thus Proposition 1 identifies exactly the same *attainable equilibrium laws* of $(\theta,t,a)$ in the two classes. A law is attainable if some equilibrium produces it. Other equilibria of the same mechanism can have different human payoffs. [Prove the two inclusions](02-revelation.html#exercise-4) and [test equilibrium multiplicity](02-revelation.html#exercise-5). [Original paper, §§1–2.3](https://arxiv.org/html/2609.01595v1#S2.SS3)
